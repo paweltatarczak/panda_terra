@@ -56,15 +56,18 @@ pipeline {
         stage('Deploy target to artifactory') {
             steps {
                 configFileProvider([configFile(fileId: 'db3a0a26-7307-4a1b-876c-9292f55ac6ed', variable: 'MAVEN_SETTINGS_ABC')]) {
-                //sh "mvn -s $MAVEN_SETTINGS deploy -Dmaven.test.skip=true"
-                sh "mvn -s $MAVEN_SETTINGS_ABC deploy"
+                sh "mvn -s $MAVEN_SETTINGS deploy -Dmaven.test.skip=true"
+                //sh "mvn -s $MAVEN_SETTINGS_ABC deploy"
                 }
             }
         } 
 
         stage('Run terraform') {
             steps {
-                dir('infrastructure/terraform') { 
+                dir('infrastructure/terraform') {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'AWSpassword', keyFileVariable: 'SSH_KEY')]) {
+                        sh 'cp "$SSH_KEY" ../panda.pem'
+                    }
                 sh 'terraform init && terraform apply -auto-approve -var-file example.tfvars'
                 } 
             }
