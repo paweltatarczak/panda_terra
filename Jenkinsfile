@@ -56,7 +56,7 @@ pipeline {
         stage('Deploy target to artifactory') {
             steps {
                 configFileProvider([configFile(fileId: 'db3a0a26-7307-4a1b-876c-9292f55ac6ed', variable: 'MAVEN_SETTINGS_ABC')]) {
-                sh "mvn -s $MAVEN_SETTINGS deploy -Dmaven.test.skip=true"
+                sh "mvn -s $MAVEN_SETTINGS_ABC deploy -Dmaven.test.skip=true"
                 //sh "mvn -s $MAVEN_SETTINGS_ABC deploy"
                 }
             }
