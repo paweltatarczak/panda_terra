@@ -65,7 +65,7 @@ pipeline {
         stage('Run terraform') {
             steps {
                 dir('infrastructure/terraform') {
-                    withCredentials([sshUserPrivateKey(credentialsId: 'AWSpassword', keyFileVariable: 'SSH_KEY')]) {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'AWSpassword', keyFileVariable: 'SSH_KEY',usernameVariable: 'ubuntu')]) {
                         sh 'cp "$SSH_KEY" ../panda.pem'
                     }
                 sh 'terraform init && terraform apply -auto-approve -var-file example.tfvars'
